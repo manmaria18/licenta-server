@@ -82,24 +82,24 @@ public class HomeService {
     }
 
     public void save(HomeDto homeDto,
-                     List<MultipartFile> images,
+
                      Long userId) throws IOException {
 
         homeDto.setRooms( new ArrayList<>());
 
-        for(int i=0; i < images.size(); i++)
-        {
-            RoomDto roomDto = new RoomDto();
-            roomDto.setImageData(images.get(i).getBytes());
-
-            homeDto.getRooms().add(roomDto);
-
-        }
+//        for(int i=0; i < images.size(); i++)
+//        {
+//            RoomDto roomDto = new RoomDto();
+//            roomDto.setImageData(images.get(i).getBytes());
+//
+//            homeDto.getRooms().add(roomDto);
+//
+//        }
 
         HomeEntity homeEntity = new HomeEntity();
         homeEntity.setName(homeDto.getName());
-        homeEntity.setDescription(homeDto.getDescription());
-        homeEntity.setPrice(homeDto.getPrice());
+        //homeEntity.setDescription(homeDto.getDescription());
+        //homeEntity.setPrice(homeDto.getPrice());
 
         User user = userRepository.getById(userId);
         homeEntity.setUser(user);
@@ -123,7 +123,7 @@ public class HomeService {
 
         }
 
-        homeEntity.setRooms(roomEntities);
+        //homeEntity.setRooms(roomEntities);
 
         LocationEntity locationEntity = new LocationEntity(homeDto.getLocation().getLatitude(), homeDto.getLocation().getLongitude(), homeEntity);
 
@@ -153,8 +153,8 @@ public class HomeService {
         }
 
         homeEntity.setName(homeDto.getName());
-        homeEntity.setDescription(homeDto.getDescription());
-        homeEntity.setPrice(homeDto.getPrice());
+        //homeEntity.setDescription(homeDto.getDescription());
+        //homeEntity.setPrice(homeDto.getPrice());
 
 
         User user = userRepository.getById(userId);
@@ -162,25 +162,25 @@ public class HomeService {
 
         homeEntity = homeRepository.save(homeEntity);
 
-        homeEntity.getRooms().clear();
-        List<RoomEntity> roomEntities = new ArrayList<>();
+       // homeEntity.getRooms().clear();
+        //List<RoomEntity> roomEntities = new ArrayList<>();
 
         // go through the rooms
-        for(RoomDto roomDto : homeDto.getRooms())
-        {
+//        for(RoomDto roomDto : homeDto.getRooms())
+//        {
+//
+//            RoomEntity roomEntity = new RoomEntity();
+//            roomEntity.setImageData(roomDto.getImageData());
+//            roomEntity.setAudioData(roomDto.getAudioData());
+//            roomEntity.setHomeEntity(homeEntity);
+//
+//            roomEntity = roomRepository.save(roomEntity);
+//
+//            roomEntities.add(roomEntity);
+//
+//        }
 
-            RoomEntity roomEntity = new RoomEntity();
-            roomEntity.setImageData(roomDto.getImageData());
-            roomEntity.setAudioData(roomDto.getAudioData());
-            roomEntity.setHomeEntity(homeEntity);
-
-            roomEntity = roomRepository.save(roomEntity);
-
-            roomEntities.add(roomEntity);
-
-        }
-
-        homeEntity.getRooms().addAll(roomEntities);
+        //homeEntity.getRooms().addAll(roomEntities);
 
         LocationEntity locationEntity = locationRepository.getById(homeEntity.getLocation().getId());
         locationEntity.setLatitude(homeDto.getLocation().getLatitude());

@@ -17,5 +17,7 @@ public interface HomeRepository extends JpaRepository<HomeEntity, Long>
     @Query(value = "SELECT * FROM home WHERE name like %:name%", nativeQuery = true)
     List<HomeEntity> search(@Param("name") String name);
 
-    List<HomeEntity> findByPriceBetween(float bottom, float top);
+    //List<HomeEntity> findByPriceBetween(float bottom, float top);
+
+    //List<HomeEntity> findByUserId(Long userId);
 }

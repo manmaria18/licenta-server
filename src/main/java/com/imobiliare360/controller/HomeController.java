@@ -41,7 +41,7 @@ public class HomeController {
     }
 
     @GetMapping(value = "/mine")
-    public ResponseEntity<List<HomeDto>> getAllCurrentUser( @CurrentUser UserPrincipal currentUser)
+    public ResponseEntity<List<HomeDto>> getMyHouses( @CurrentUser UserPrincipal currentUser)
     {
         return new ResponseEntity<List<HomeDto>>(homeService.getAllForUser(currentUser.getId()), HttpStatus.OK);
     }
@@ -108,8 +108,7 @@ public class HomeController {
 
 
     @PostMapping(value="/", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<String> create(@RequestPart("images") List<MultipartFile> images,
-                                         @RequestPart("home") HomeDto homeDto,
+    public ResponseEntity<String> create(@RequestPart("home") HomeDto homeDto,
                                          @CurrentUser UserPrincipal currentUser)
     {
         System.out.println(homeDto);
@@ -117,7 +116,7 @@ public class HomeController {
 
 
         try {
-            homeService.save(homeDto, images, currentUser.getId());
+            homeService.save(homeDto, currentUser.getId());
         } catch (IOException e) {
             return new ResponseEntity<String>("Home was not created...", HttpStatus.INTERNAL_SERVER_ERROR);
         }

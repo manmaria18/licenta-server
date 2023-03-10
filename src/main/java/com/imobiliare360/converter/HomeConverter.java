@@ -1,12 +1,10 @@
 package com.imobiliare360.converter;
 
-import com.imobiliare360.dto.HomeDto;
-import com.imobiliare360.dto.LocationDto;
-import com.imobiliare360.dto.RoomDto;
-import com.imobiliare360.dto.UserDto;
+import com.imobiliare360.dto.*;
 import com.imobiliare360.entity.FavoriteHomeEntity;
 import com.imobiliare360.entity.HomeEntity;
 import com.imobiliare360.entity.LocationEntity;
+import com.imobiliare360.repository.BillRepository;
 import com.imobiliare360.repository.FavoriteHomeRepository;
 import com.imobiliare360.security.UserPrincipal;
 import com.imobiliare360.security.model.User;
@@ -24,6 +22,9 @@ public class HomeConverter {
     @Autowired
     private FavoriteHomeRepository favoriteHomeRepository;
 
+    @Autowired
+    private BillRepository billRepository;
+
     public UserDto userEntityToDto(User user) {
         UserDto userDto = new UserDto();
         userDto.setUsername(user.getUsername());
@@ -39,31 +40,33 @@ public class HomeConverter {
         HomeDto homeDto = new HomeDto();
         homeDto.setId(homeEntity.getId());
         homeDto.setName(homeEntity.getName());
-        homeDto.setDescription(homeEntity.getDescription());
+        //homeDto.setDescription(homeEntity.getDescription());
         homeDto.setLocation(locationEntityToDto(homeEntity.getLocation()));
         homeDto.setUserDto(userEntityToDto(homeEntity.getUser()));
 
         homeDto.setLiked(false);
-        try {
-            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//        try {
+//            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//
+//            long id = ((UserPrincipal) auth.getPrincipal()).getId();
+//            //List<FavoriteHomeEntity> favoriteHomeEntity = favoriteHomeRepository.findByUserIdAndHouseId(id, homeEntity.getId());
+//            //boolean isLiked = favoriteHomeEntity.size() > 0;
+//            //homeDto.setLiked(isLiked);
+//        }
+//        catch (Exception e) {
+//            System.out.println(e);
+//        }
 
-            long id = ((UserPrincipal) auth.getPrincipal()).getId();
-            List<FavoriteHomeEntity> favoriteHomeEntity = favoriteHomeRepository.findByUserIdAndHouseId(id, homeEntity.getId());
-            boolean isLiked = favoriteHomeEntity.size() > 0;
-            homeDto.setLiked(isLiked);
-        }
-        catch (Exception e) {
-            System.out.println(e);
-        }
-
-        List<RoomDto> rooms = homeEntity.getRooms().stream()
-                .map(currentRoom ->
+       List<BillDto> bills =billRepository.findByHomeId(homeEntity.getId())
+                .stream()
+                .map(currentBill ->
                 {
-                    return new RoomDto(currentRoom.getImageData(), currentRoom.getAudioData());
+                    return new BillDto(currentBill.getId(), currentBill.getSum(),currentBill.getHome().getId(),currentBill.getBillType(), currentBill.getIssuedBy(),currentBill.getIssueDate(),currentBill.getDeadline());
                 })
                 .collect(Collectors.toList());
 
-        homeDto.setRooms(rooms);
+        //List<BillDto> bills2 = billRepository.search(homeEntity.getId());
+        homeDto.setBills(bills);
 
         return homeDto;
 

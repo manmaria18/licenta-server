@@ -16,6 +16,7 @@ public class HomeDto
     private String description;
     private float price;
     private List<RoomDto> rooms;
+    private List<BillDto> bills;
     private LocationDto location;
     private UserDto userDto;
     private boolean isLiked;
