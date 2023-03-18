@@ -1,13 +1,8 @@
 package com.imobiliare360.dto;
 
 
-import com.imobiliare360.entity.BillType;
-import com.imobiliare360.entity.HomeEntity;
-import com.imobiliare360.entity.ProviderEntity;
+import com.imobiliare360.entity.ServiceType;
 import lombok.*;
-
-import java.time.LocalDate;
-import java.util.Date;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,7 +10,9 @@ import java.util.Date;
 @Setter
 @ToString
 public class ProviderServicesDto {
+    private long id;
     //tipul de serviciu
-    private BillType billType;
+    private ServiceTypeDto serviceType;
     private float price;
+    private ProviderDto provider;
 }

@@ -22,9 +22,8 @@ public class BillEntity extends BaseEntity{
     @JoinColumn(name= "home_id")
     private HomeEntity home;
 
-    private BillType billType;
     @OneToOne
-    private ProviderEntity issuedBy;
+    private ProviderServiceEntity providerService;
     @Temporal(TemporalType.TIMESTAMP)
     private Date issueDate;
     @Temporal(TemporalType.TIMESTAMP)

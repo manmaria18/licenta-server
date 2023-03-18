@@ -1,25 +1,11 @@
 package com.imobiliare360.controller;
-import com.imobiliare360.dto.BillDto;
 import com.imobiliare360.dto.ProviderDto;
-import com.imobiliare360.entity.BillType;
-import com.imobiliare360.entity.ProviderServiceEntity;
-import com.imobiliare360.entity.ProviderEntity;
-import com.imobiliare360.security.CurrentUser;
-import com.imobiliare360.security.UserPrincipal;
-import com.imobiliare360.service.BillService;
 import com.imobiliare360.service.ProviderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
-
-
-import javax.persistence.EntityNotFoundException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
 
 @RestController
 @CrossOrigin

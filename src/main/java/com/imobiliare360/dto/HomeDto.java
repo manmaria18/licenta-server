@@ -13,11 +13,11 @@ public class HomeDto
 {
     private Long id;
     private String name;
-    private String description;
+    //private String description;
     private float price;
-    private List<RoomDto> rooms;
+    private List<ProviderServicesDto> services;
     private List<BillDto> bills;
     private LocationDto location;
     private UserDto userDto;
-    private boolean isLiked;
+    //private boolean isLiked;
 }

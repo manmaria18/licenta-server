@@ -5,10 +5,7 @@ import com.imobiliare360.converter.HomeConverter;
 import com.imobiliare360.dto.BillDto;
 import com.imobiliare360.dto.HomeDto;
 import com.imobiliare360.dto.RoomDto;
-import com.imobiliare360.entity.BillEntity;
-import com.imobiliare360.entity.HomeEntity;
-import com.imobiliare360.entity.LocationEntity;
-import com.imobiliare360.entity.RoomEntity;
+import com.imobiliare360.entity.*;
 import com.imobiliare360.repository.*;
 import com.imobiliare360.security.model.User;
 import com.imobiliare360.security.repository.UserRepository;
@@ -34,6 +31,8 @@ public class BillService {
     private UserRepository userRepository;
     @Autowired
     private BillConverter billConverter;
+    @Autowired
+    private ProviderServicesRepository providerServiceRepository;
 //    @Autowired
 //    private FavoriteHomeRepository favoriteHomeRepository;
     public List<BillDto> search(Long houseId) {
@@ -88,11 +87,12 @@ public class BillService {
             BillEntity billEntity = new BillEntity();
             billEntity.setSum(billDto.getSum());
             billEntity.setIssueDate(billDto.getIssueDate());
-            billEntity.setIssuedBy(billDto.getIssuedBy());
+            //billEntity.setIssuedBy(billDto.getIssuedBy());
             billEntity.setDeadline(billDto.getDeadline());
             HomeEntity home = homeRepository.getById(homeId);
             billEntity.setHome(home);
-            billEntity.setBillType(billDto.getBillType());
+            ProviderServiceEntity providedService = providerServiceRepository.getById(billDto.getProviderService().getId());
+            billEntity.setProviderService(providedService);
             //User user = userRepository.getById(userId);
             //homeEntity.setUser(user);
 
@@ -104,9 +104,10 @@ public class BillService {
         BillEntity billEntity = new BillEntity();
         billEntity.setSum(billDto.getSum());
         billEntity.setIssueDate(billDto.getIssueDate());
-        billEntity.setIssuedBy(billDto.getIssuedBy());
+        ProviderServiceEntity providedService = providerServiceRepository.getById(billDto.getProviderService().getId());
+        billEntity.setProviderService(providedService);
         billEntity.setDeadline(billDto.getDeadline());
-        billEntity.setBillType(billDto.getBillType());
+        //billEntity.setServiceType(billDto.getServiceType());
         //HomeEntity home = homeRepository.getById(homeId);
         //billEntity.setHouse(bill.getHouse());
         //User user = userRepository.getById(userId);

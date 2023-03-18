@@ -1,2 +1,5 @@
 INSERT INTO roles (name) VALUES('ROLE_USER');
 INSERT INTO roles (name) VALUES('ROLE_ADMIN');
+INSERT INTO service_type(id,type)VALUES(1,'GAS');
+INSERT INTO service_type(id,type)VALUES(2,'ELECTRICITY');
+INSERT INTO service_type(id,type)VALUES(3,'MAINTENENCE');

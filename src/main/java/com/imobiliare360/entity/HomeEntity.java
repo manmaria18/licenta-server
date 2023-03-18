@@ -30,5 +30,5 @@ public class HomeEntity extends BaseEntity
     private User user;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProviderEntity> providers;
+    private List<ProviderServiceEntity> services;
 }

@@ -85,7 +85,7 @@ public class HomeService {
 
                      Long userId) throws IOException {
 
-        homeDto.setRooms( new ArrayList<>());
+        //homeDto.setRooms( new ArrayList<>());
 
 //        for(int i=0; i < images.size(); i++)
 //        {
@@ -106,22 +106,22 @@ public class HomeService {
 
         homeEntity = homeRepository.save(homeEntity);
 
-        List<RoomEntity> roomEntities = new ArrayList<>();
+        //List<RoomEntity> roomEntities = new ArrayList<>();
 
         // go through the rooms
-        for(RoomDto roomDto : homeDto.getRooms())
-        {
-
-            RoomEntity roomEntity = new RoomEntity();
-            roomEntity.setImageData(roomDto.getImageData());
-            roomEntity.setAudioData(roomDto.getAudioData());
-            roomEntity.setHomeEntity(homeEntity);
-
-            roomEntity = roomRepository.save(roomEntity);
-
-            roomEntities.add(roomEntity);
-
-        }
+//        for(RoomDto roomDto : homeDto.getRooms())
+//        {
+//
+//            RoomEntity roomEntity = new RoomEntity();
+//            roomEntity.setImageData(roomDto.getImageData());
+//            roomEntity.setAudioData(roomDto.getAudioData());
+//            roomEntity.setHomeEntity(homeEntity);
+//
+//            roomEntity = roomRepository.save(roomEntity);
+//
+//            roomEntities.add(roomEntity);
+//
+//        }
 
         //homeEntity.setRooms(roomEntities);
 
@@ -141,16 +141,16 @@ public class HomeService {
 
         HomeEntity homeEntity = homeRepository.getById(homeDto.getId());
 
-        homeDto.setRooms( new ArrayList<>());
+        //homeDto.setRooms( new ArrayList<>());
 
-        for(int i=0; i < images.size(); i++)
-        {
-            RoomDto roomDto = new RoomDto();
-            roomDto.setImageData(images.get(i).getBytes());
-
-            homeDto.getRooms().add(roomDto);
-
-        }
+//        for(int i=0; i < images.size(); i++)
+//        {
+//            RoomDto roomDto = new RoomDto();
+//            roomDto.setImageData(images.get(i).getBytes());
+//
+//            homeDto.getRooms().add(roomDto);
+//
+//        }
 
         homeEntity.setName(homeDto.getName());
         //homeEntity.setDescription(homeDto.getDescription());

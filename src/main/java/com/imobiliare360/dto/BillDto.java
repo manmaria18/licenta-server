@@ -1,12 +1,10 @@
 package com.imobiliare360.dto;
 
 
-import com.imobiliare360.entity.BillType;
-import com.imobiliare360.entity.HomeEntity;
 import com.imobiliare360.entity.ProviderEntity;
+import com.imobiliare360.entity.ServiceType;
 import lombok.*;
 
-import java.time.LocalDate;
 import java.util.Date;
 
 @AllArgsConstructor
@@ -18,8 +16,8 @@ public class BillDto {
     private Long id;
     private float sum;
     private Long houseId;
-    private BillType billType;
-    private ProviderEntity issuedBy;
+    private ProviderServicesDto providerService;
     private Date issueDate;
     private Date deadline;
+
 }

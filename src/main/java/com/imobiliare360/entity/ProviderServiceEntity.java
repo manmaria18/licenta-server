@@ -3,9 +3,10 @@ import lombok.*;
 //import org.springframework.data.jpa.repository.Temporal;
 
 import javax.persistence.*;
+import java.awt.*;
 
 @Entity
-@Table(name="provided_service")
+@Table(name="service")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -15,6 +16,10 @@ import javax.persistence.*;
 
 public class ProviderServiceEntity extends BaseEntity{
     //tipul de serviciu
-    private BillType billType;
+    @OneToOne
+    private ServiceType serviceType;
     private float price;
+   // private List<HouseEntity>
+    @ManyToOne
+    private ProviderEntity provider;
 }

@@ -1,13 +1,14 @@
 package com.imobiliare360.controller;
 
 
-import com.imobiliare360.dto.BillDto;
-import com.imobiliare360.entity.BillType;
+import com.imobiliare360.dto.*;
 import com.imobiliare360.entity.ProviderServiceEntity;
 import com.imobiliare360.entity.ProviderEntity;
+import com.imobiliare360.entity.ServiceType;
 import com.imobiliare360.security.CurrentUser;
 import com.imobiliare360.security.UserPrincipal;
 import com.imobiliare360.service.BillService;
+import com.imobiliare360.service.HomeService;
 import com.imobiliare360.service.ProviderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 import javax.persistence.EntityNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -32,6 +34,9 @@ public class BillController {
 
     @Autowired
     private ProviderService providerService;
+
+    @Autowired
+    private HomeService homeService;
 
     @GetMapping(value = "/search/{houseId}")
     public ResponseEntity<?> search(@PathVariable Long houseId)
@@ -131,31 +136,42 @@ public class BillController {
 
     }
 
-    @GetMapping(value="/test")
-    public ResponseEntity<String> createTest()
+    @GetMapping(value="/testBill")
+    public ResponseEntity<String> createTestBill()
     //@CurrentUser UserPrincipal currentUser)
     {
         BillDto billDto = new BillDto();
-        billDto.setBillType(BillType.GAS);
+        ProviderServicesDto myService = new ProviderServicesDto();
+        myService.setId(1L);
+
+        billDto.setProviderService(myService);
         billDto.setSum(120);
         billDto.setDeadline(Calendar.getInstance().getTime());
         billDto.setIssueDate(Calendar.getInstance().getTime());
-        List<ProviderServiceEntity> providedServices = new ArrayList<>();
-        ProviderServiceEntity pse1 = new ProviderServiceEntity(BillType.ELECTRICITY,120);
-        ProviderServiceEntity pse2 = new ProviderServiceEntity(BillType.GAS,120);
-        providedServices.add(pse1);
-        //providerServicesService.save(pse1);
-        providedServices.add(pse2);
-        //providerService.save(pse2);
-        ProviderEntity provider = new ProviderEntity("Electrica",providedServices);
-        //providerService.save(provider);
-        billDto.setIssuedBy(provider);
         billDto.setHouseId(1L);
         System.out.println(billDto);
-        //System.out.println(billDto.getLocation().getLatitude());
+
 
 
         billService.save(billDto,1L);
+
+        return new ResponseEntity<String>("Bill was created with great success!", HttpStatus.OK);
+
+    }
+
+    @GetMapping(value="/testHouse")
+    public ResponseEntity<String> createTestHouse() throws IOException
+    //@CurrentUser UserPrincipal currentUser)
+    {
+        HomeDto testHome = new HomeDto();
+        //testHome.setId(1L);
+        testHome.setName("Vila");
+        UserDto me = new UserDto();
+        me.setUsername("Mar");
+        testHome.setUserDto(me);
+        testHome.setLocation(new LocationDto(0,0));
+
+        homeService.save(testHome,1L);
 
         return new ResponseEntity<String>("Bill was created with great success!", HttpStatus.OK);
 

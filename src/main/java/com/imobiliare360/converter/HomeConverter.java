@@ -1,17 +1,12 @@
 package com.imobiliare360.converter;
 
 import com.imobiliare360.dto.*;
-import com.imobiliare360.entity.FavoriteHomeEntity;
 import com.imobiliare360.entity.HomeEntity;
 import com.imobiliare360.entity.LocationEntity;
 import com.imobiliare360.repository.BillRepository;
 import com.imobiliare360.repository.FavoriteHomeRepository;
-import com.imobiliare360.security.UserPrincipal;
 import com.imobiliare360.security.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -24,6 +19,9 @@ public class HomeConverter {
 
     @Autowired
     private BillRepository billRepository;
+
+    @Autowired
+    private ProviderServiceConverter providerServiceConvertor;
 
     public UserDto userEntityToDto(User user) {
         UserDto userDto = new UserDto();
@@ -44,7 +42,7 @@ public class HomeConverter {
         homeDto.setLocation(locationEntityToDto(homeEntity.getLocation()));
         homeDto.setUserDto(userEntityToDto(homeEntity.getUser()));
 
-        homeDto.setLiked(false);
+        //homeDto.setLiked(false);
 //        try {
 //            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 //
@@ -61,7 +59,14 @@ public class HomeConverter {
                 .stream()
                 .map(currentBill ->
                 {
-                    return new BillDto(currentBill.getId(), currentBill.getSum(),currentBill.getHome().getId(),currentBill.getBillType(), currentBill.getIssuedBy(),currentBill.getIssueDate(),currentBill.getDeadline());
+                    return new BillDto(
+                            currentBill.getId(),
+                            currentBill.getSum(),
+                            currentBill.getHome().getId() ,
+                            providerServiceConvertor.convertToDto(currentBill.getProviderService()),
+                            currentBill.getIssueDate(),
+                            currentBill.getDeadline()
+                    );
                 })
                 .collect(Collectors.toList());
 

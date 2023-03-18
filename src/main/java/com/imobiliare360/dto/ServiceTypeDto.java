@@ -1,6 +1,4 @@
 package com.imobiliare360.dto;
-
-
 import lombok.*;
 
 import java.util.List;
@@ -10,7 +8,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-public class ProviderDto {
-    private String name;
-    private List<ProviderServicesDto> services;
+public class ServiceTypeDto {
+    Long id;
+    String type;
 }

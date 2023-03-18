@@ -37,7 +37,7 @@ public class ProviderService {
         {
 
             ProviderServiceEntity psEntity = new ProviderServiceEntity();
-            psEntity.setBillType(psDto.getBillType());
+            //psEntity.setServiceType(psDto.getServiceType());
             psEntity.setPrice(psDto.getPrice());
 
 
