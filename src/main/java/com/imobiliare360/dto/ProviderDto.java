@@ -8,18 +8,14 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @ToString
-public class BillDto {
-    private Long id;
-    private float sum;
-    private Long houseId;
-    private BillType billType;
-    private ProviderEntity issuedBy;
-    private Date issueDate;
-    private Date deadline;
+public class ProviderDto {
+    private String name;
+    private List<ProviderServicesDto> services;
 }

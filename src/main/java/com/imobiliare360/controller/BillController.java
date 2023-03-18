@@ -2,25 +2,24 @@ package com.imobiliare360.controller;
 
 
 import com.imobiliare360.dto.BillDto;
-import com.imobiliare360.dto.HomeDto;
 import com.imobiliare360.entity.BillType;
+import com.imobiliare360.entity.ProviderServiceEntity;
+import com.imobiliare360.entity.ProviderEntity;
 import com.imobiliare360.security.CurrentUser;
 import com.imobiliare360.security.UserPrincipal;
 import com.imobiliare360.service.BillService;
-import com.imobiliare360.service.HomeService;
+import com.imobiliare360.service.ProviderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 
 import javax.persistence.EntityNotFoundException;
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -30,6 +29,9 @@ import java.util.List;
 public class BillController {
     @Autowired
     private BillService billService;
+
+    @Autowired
+    private ProviderService providerService;
 
     @GetMapping(value = "/search/{houseId}")
     public ResponseEntity<?> search(@PathVariable Long houseId)
@@ -138,7 +140,16 @@ public class BillController {
         billDto.setSum(120);
         billDto.setDeadline(Calendar.getInstance().getTime());
         billDto.setIssueDate(Calendar.getInstance().getTime());
-        billDto.setIssuedBy("Eon");
+        List<ProviderServiceEntity> providedServices = new ArrayList<>();
+        ProviderServiceEntity pse1 = new ProviderServiceEntity(BillType.ELECTRICITY,120);
+        ProviderServiceEntity pse2 = new ProviderServiceEntity(BillType.GAS,120);
+        providedServices.add(pse1);
+        //providerServicesService.save(pse1);
+        providedServices.add(pse2);
+        //providerService.save(pse2);
+        ProviderEntity provider = new ProviderEntity("Electrica",providedServices);
+        //providerService.save(provider);
+        billDto.setIssuedBy(provider);
         billDto.setHouseId(1L);
         System.out.println(billDto);
         //System.out.println(billDto.getLocation().getLatitude());

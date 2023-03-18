@@ -18,8 +18,7 @@ public class HomeEntity extends BaseEntity
     private String name;
     //private String description;
     //private float price;
-//    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<RoomEntity> rooms;
+
 
 //    @OneToMany(mappedBy="home", cascade = CascadeType.ALL, orphanRemoval = true)
 //    private List<BillEntity> bills;
@@ -30,5 +29,6 @@ public class HomeEntity extends BaseEntity
     @ManyToOne
     private User user;
 
-
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProviderEntity> providers;
 }

@@ -14,12 +14,8 @@ import java.util.Date;
 @Getter
 @Setter
 @ToString
-public class BillDto {
-    private Long id;
-    private float sum;
-    private Long houseId;
+public class ProviderServicesDto {
+    //tipul de serviciu
     private BillType billType;
-    private ProviderEntity issuedBy;
-    private Date issueDate;
-    private Date deadline;
+    private float price;
 }

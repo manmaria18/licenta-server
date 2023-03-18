@@ -23,7 +23,8 @@ public class BillEntity extends BaseEntity{
     private HomeEntity home;
 
     private BillType billType;
-    private String issuedBy;
+    @OneToOne
+    private ProviderEntity issuedBy;
     @Temporal(TemporalType.TIMESTAMP)
     private Date issueDate;
     @Temporal(TemporalType.TIMESTAMP)
