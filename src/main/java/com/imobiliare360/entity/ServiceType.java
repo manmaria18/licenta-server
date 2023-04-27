@@ -14,5 +14,5 @@ import java.awt.*;
 @ToString
 public class ServiceType extends BaseEntity{
     private String type;
-
+    private String priceType;
 }

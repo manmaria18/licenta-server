@@ -2,10 +2,12 @@ package com.imobiliare360.converter;
 
 import com.imobiliare360.dto.BillDto;
 import com.imobiliare360.dto.HomeDto;
+import com.imobiliare360.dto.ProviderServicesDto;
 import com.imobiliare360.dto.RoomDto;
 import com.imobiliare360.entity.BillEntity;
 import com.imobiliare360.entity.FavoriteHomeEntity;
 import com.imobiliare360.security.UserPrincipal;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -15,7 +17,10 @@ import java.util.stream.Collectors;
 
 @Component
 public class BillConverter {
+    @Autowired
     private HomeConverter homeConverter;
+    @Autowired
+    private ProviderServiceConverter providerServiceConvertor;
     public List<BillDto> billEntitiesToDtos(List<BillEntity> billEntities) {
         return billEntities.stream()
                 .map(currentBill -> billEntityToDto(currentBill)
@@ -28,7 +33,8 @@ public class BillConverter {
         billDto.setId(billEntity.getId());
         billDto.setSum(billEntity.getSum());
         billDto.setIssueDate(billEntity.getIssueDate());
-        billDto.setIssuedBy(billEntity.getIssuedBy());
+        ProviderServicesDto psDto = providerServiceConvertor.convertToDto(billEntity.getProviderService());
+        billDto.setProviderService(psDto);
         billDto.setDeadline(billEntity.getDeadline());
         HomeDto house = homeConverter.homeEntityToDto(billEntity.getHome());
         billDto.setHouseId(house.getId());

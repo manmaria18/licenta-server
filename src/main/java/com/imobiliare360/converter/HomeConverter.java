@@ -31,6 +31,7 @@ public class HomeConverter {
     }
 
     public LocationDto locationEntityToDto(LocationEntity locationEntity) {
+
         return new LocationDto(locationEntity.getLatitude(), locationEntity.getLongitude());
     }
 
@@ -39,21 +40,14 @@ public class HomeConverter {
         homeDto.setId(homeEntity.getId());
         homeDto.setName(homeEntity.getName());
         //homeDto.setDescription(homeEntity.getDescription());
-        homeDto.setLocation(locationEntityToDto(homeEntity.getLocation()));
+        if(homeEntity.getLocation()!=null){
+            homeDto.setLocation(locationEntityToDto(homeEntity.getLocation()));
+        }
         homeDto.setUserDto(userEntityToDto(homeEntity.getUser()));
-
-        //homeDto.setLiked(false);
-//        try {
-//            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//
-//            long id = ((UserPrincipal) auth.getPrincipal()).getId();
-//            //List<FavoriteHomeEntity> favoriteHomeEntity = favoriteHomeRepository.findByUserIdAndHouseId(id, homeEntity.getId());
-//            //boolean isLiked = favoriteHomeEntity.size() > 0;
-//            //homeDto.setLiked(isLiked);
-//        }
-//        catch (Exception e) {
-//            System.out.println(e);
-//        }
+        List<ProviderServicesDto> providerServicesDtoList = homeEntity.getServices().stream().map(service -> {
+            return providerServiceConvertor.convertToDto(service);
+        }) .collect(Collectors.toList());;
+        homeDto.setServices(providerServicesDtoList);
 
        List<BillDto> bills =billRepository.findByHomeId(homeEntity.getId())
                 .stream()
@@ -65,7 +59,10 @@ public class HomeConverter {
                             currentBill.getHome().getId() ,
                             providerServiceConvertor.convertToDto(currentBill.getProviderService()),
                             currentBill.getIssueDate(),
-                            currentBill.getDeadline()
+                            currentBill.getDeadline(),
+                            new BillStatusDto(currentBill.getStatus().getId(),currentBill.getStatus().getStatus())
+
+
                     );
                 })
                 .collect(Collectors.toList());

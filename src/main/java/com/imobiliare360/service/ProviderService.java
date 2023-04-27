@@ -15,42 +15,14 @@ public class ProviderService {
     @Autowired
     ProviderServicesRepository providerServicesRepository;
 
-    public void save(ProviderDto providerDto, Long homeId) {
-
-
-        //homeDto.setRooms( new ArrayList<>());
-
-//            for(int i=0; i < images.size(); i++)
-//            {
-//                RoomDto roomDto = new RoomDto();
-//                roomDto.setImageData(images.get(i).getBytes());
-//
-//                homeDto.getRooms().add(roomDto);
-//
-//            }
+    public void save(ProviderDto providerDto) {
 
         ProviderEntity providerEntity = new ProviderEntity();
         providerEntity.setName(providerDto.getName());
         List<ProviderServiceEntity> psEntities = new ArrayList<>();
         // go through the services
-        for(ProviderServicesDto psDto : providerDto.getServices())
-        {
 
-            ProviderServiceEntity psEntity = new ProviderServiceEntity();
-            //psEntity.setServiceType(psDto.getServiceType());
-            psEntity.setPrice(psDto.getPrice());
-
-
-            psEntity = providerServicesRepository.save(psEntity);
-
-            psEntities.add(psEntity);
-
-        }
         providerEntity.setServices(psEntities);
-        //User user = userRepository.getById(userId);
-        //homeEntity.setUser(user);
-
-        //billEntity = billRepository.save(billEntity);
         providerRepository.save(providerEntity);
     }
 }

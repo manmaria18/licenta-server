@@ -14,7 +14,7 @@ public class HomeDto
     private Long id;
     private String name;
     //private String description;
-    private float price;
+    //private float price;
     private List<ProviderServicesDto> services;
     private List<BillDto> bills;
     private LocationDto location;

@@ -9,6 +9,8 @@ import com.imobiliare360.entity.*;
 import com.imobiliare360.repository.*;
 import com.imobiliare360.security.model.User;
 import com.imobiliare360.security.repository.UserRepository;
+import com.imobiliare360.util.BillStatus;
+import com.imobiliare360.util.PriceType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,6 +26,9 @@ public class BillService {
 
     @Autowired
     private BillRepository billRepository;
+    @Autowired
+    private BillStatusRepository billStatusRepository;
+
     @Autowired
     private HomeRepository homeRepository;
 //    @Autowired
@@ -33,6 +39,8 @@ public class BillService {
     private BillConverter billConverter;
     @Autowired
     private ProviderServicesRepository providerServiceRepository;
+    @Autowired
+    private ProviderRepository providerRepository;
 //    @Autowired
 //    private FavoriteHomeRepository favoriteHomeRepository;
     public List<BillDto> search(Long houseId) {
@@ -93,11 +101,67 @@ public class BillService {
             billEntity.setHome(home);
             ProviderServiceEntity providedService = providerServiceRepository.getById(billDto.getProviderService().getId());
             billEntity.setProviderService(providedService);
-            //User user = userRepository.getById(userId);
+            BillStatusEntity status = billStatusRepository.getById(billDto.getStatus().getId());
+            billEntity.setStatus(status);
+
+            billEntity.setStatus(status);
+
             //homeEntity.setUser(user);
 
             //billEntity = billRepository.save(billEntity);
             billRepository.save(billEntity);
+    }
+
+    public void generateBillsForServiceProvider(Long serviceProviderID){
+
+
+    }
+
+    public void generateBillsForServiceProviderServiceType(Long serviceProviderID,Long serviceTypeID){
+           ProviderServiceEntity pse = providerRepository.getById(serviceProviderID).getServices().stream().filter(providerServiceEntity -> {
+                return providerServiceEntity.getServiceType().getId().equals(serviceTypeID);
+           }).findFirst().get();
+
+            List<HomeEntity> homes = homeRepository.findAll().stream().filter(home -> {
+                return home.getServices().stream().anyMatch(serviceEntity -> {
+                    return serviceEntity.getServiceType().getId().equals(serviceTypeID)
+                            && serviceEntity.getProvider().getId().equals(serviceProviderID);
+                });
+            }).collect(Collectors.toList());
+
+            List<BillEntity> bills = new ArrayList<>();
+
+            for(HomeEntity home : homes){
+                BillEntity newBill = new BillEntity();
+                newBill.setHome(home);
+                List<BillStatusEntity> statuses = billStatusRepository.findAll();
+                BillStatusEntity pendingStatus = statuses.stream().filter(billStatus-> {
+                    return  BillStatus.PENDING.equals(billStatus.getStatus());
+                }).findFirst().get();
+                BillStatusEntity expectingInputStatus = statuses.stream().filter(billStatus-> {
+                    return  BillStatus.EXPECTING_INPUT.equals(billStatus.getStatus());
+                }).findFirst().get();
+                BillStatusEntity actualStatus;
+                switch(pse.getServiceType().getPriceType()){
+                    case PriceType.FIX:
+                        actualStatus = pendingStatus;
+                        break;
+                    case PriceType.VARIABIL:
+                        actualStatus = expectingInputStatus;
+                        break;
+                    default:
+                        actualStatus = null;
+                }
+
+                newBill.setStatus(actualStatus);
+                newBill.setProviderService(pse);
+                float actualPrice=0;
+                if(PriceType.FIX.equals(pse.getServiceType().getPriceType())){
+                    actualPrice=pse.getPrice();
+                }
+                newBill.setSum(actualPrice);
+            }
+
     }
 
     public void edit(BillDto billDto){

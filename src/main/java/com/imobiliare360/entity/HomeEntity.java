@@ -29,6 +29,6 @@ public class HomeEntity extends BaseEntity
     @ManyToOne
     private User user;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany
     private List<ProviderServiceEntity> services;
 }

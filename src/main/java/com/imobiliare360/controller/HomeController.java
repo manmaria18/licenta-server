@@ -107,8 +107,8 @@ public class HomeController {
     }
 
 
-    @PostMapping(value="/", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<String> create(@RequestPart("home") HomeDto homeDto,
+    @PostMapping(value="/")
+    public ResponseEntity<String> create(@RequestBody HomeDto homeDto,
                                          @CurrentUser UserPrincipal currentUser)
     {
         System.out.println(homeDto);
@@ -125,9 +125,8 @@ public class HomeController {
 
     }
 
-    @PutMapping(value="/", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<String> edit(@RequestPart("images") List<MultipartFile> images,
-                                         @RequestPart("home") HomeDto homeDto,
+    @PutMapping(value="/")
+    public ResponseEntity<String> edit(@RequestBody HomeDto homeDto,
                                          @CurrentUser UserPrincipal currentUser)
     {
         System.out.println(homeDto);
@@ -135,7 +134,7 @@ public class HomeController {
 
 
         try {
-            homeService.edit(homeDto, images, currentUser.getId());
+            homeService.edit(homeDto, currentUser.getId());
         } catch (IOException e) {
             return new ResponseEntity<String>("Home was not created...", HttpStatus.INTERNAL_SERVER_ERROR);
         }

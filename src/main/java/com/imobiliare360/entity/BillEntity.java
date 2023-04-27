@@ -1,12 +1,9 @@
 package com.imobiliare360.entity;
-import com.imobiliare360.security.model.User;
 import lombok.*;
 //import org.springframework.data.jpa.repository.Temporal;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @Table(name="bill")
@@ -28,7 +25,8 @@ public class BillEntity extends BaseEntity{
     private Date issueDate;
     @Temporal(TemporalType.TIMESTAMP)
     private Date deadline;
-
+    @OneToOne
+    private BillStatusEntity status;
 
 
 }

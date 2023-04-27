@@ -19,5 +19,7 @@ public class BillDto {
     private ProviderServicesDto providerService;
     private Date issueDate;
     private Date deadline;
+    private BillStatusDto status;
+
 
 }
