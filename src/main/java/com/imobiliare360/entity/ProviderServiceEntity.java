@@ -21,5 +21,6 @@ public class ProviderServiceEntity extends BaseEntity{
     private float price;
    // private List<HouseEntity>
     @ManyToOne
+    @JoinColumn(name = "provider_id")
     private ProviderEntity provider;
 }

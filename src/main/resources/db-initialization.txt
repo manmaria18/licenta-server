@@ -1,8 +1,8 @@
 INSERT INTO roles (name) VALUES('ROLE_USER');
 INSERT INTO roles (name) VALUES('ROLE_ADMIN');
-INSERT INTO service_type(id,type)VALUES(1,'GAS');
-INSERT INTO service_type(id,type)VALUES(2,'ELECTRICITY');
-INSERT INTO service_type(id,type)VALUES(3,'MAINTENENCE');
+INSERT INTO service_type(id,price_type,type)VALUES(1,'VARIABIL','GAS');
+INSERT INTO service_type(id,price_type,type)VALUES(2,'VARIABIL','ELECTRICITY');
+INSERT INTO service_type(id,price_type,type)VALUES(3,'FIX','MAINTENENCE');
 insert into bill_type values(1,'FIX');
 insert into bill_type values(2,'VARIABLE');
 insert into bill_status values(1,'PENDING');

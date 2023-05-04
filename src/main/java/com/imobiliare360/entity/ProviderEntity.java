@@ -14,7 +14,7 @@ import java.util.List;
 @ToString
 public class ProviderEntity extends BaseEntity{
     private String name;
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "provider")
     private List<ProviderServiceEntity> services;
 
 

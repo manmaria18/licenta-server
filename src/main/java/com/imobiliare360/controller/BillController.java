@@ -2,6 +2,7 @@ package com.imobiliare360.controller;
 
 
 import com.imobiliare360.dto.*;
+import com.imobiliare360.entity.BillEntity;
 import com.imobiliare360.entity.ProviderServiceEntity;
 import com.imobiliare360.entity.ProviderEntity;
 import com.imobiliare360.entity.ServiceType;
@@ -10,6 +11,7 @@ import com.imobiliare360.security.UserPrincipal;
 import com.imobiliare360.service.BillService;
 import com.imobiliare360.service.HomeService;
 import com.imobiliare360.service.ProviderService;
+import com.imobiliare360.util.BillStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -135,6 +137,25 @@ public class BillController {
         return new ResponseEntity<String>("Bill was created with great success!", HttpStatus.OK);
 
     }
+    @GetMapping(value="/status/")
+    public ResponseEntity<String> create()
+    //@CurrentUser UserPrincipal currentUser)
+    {
+       BillStatusDto pending = new BillStatusDto();
+       pending.setStatus(BillStatus.PENDING);
+       BillStatusDto expectingInput = new BillStatusDto();
+       expectingInput.setStatus(BillStatus.EXPECTING_INPUT);
+       BillStatusDto payed = new BillStatusDto();
+       payed.setStatus(BillStatus.PAYED);
+       BillStatusDto canceled = new BillStatusDto();
+       canceled.setStatus(BillStatus.CANCELED);
+        billService.save(pending);
+        billService.save(expectingInput);
+        billService.save(payed);
+        billService.save(canceled);
+        return new ResponseEntity<String>("Bill was created with great success!", HttpStatus.OK);
+
+    }
 
     @GetMapping(value="/testBill")
     public ResponseEntity<String> createTestBill()
@@ -158,6 +179,13 @@ public class BillController {
         return new ResponseEntity<String>("Bill was created with great success!", HttpStatus.OK);
 
     }
+
+    @PostMapping(value ="/testGenerate")
+    public void generateBillsTest(){
+
+        billService.generateBillsForServiceProviderServiceType(4L, 1L);
+    }
+
 
     @GetMapping(value="/testHouse")
     public ResponseEntity<String> createTestHouse() throws IOException

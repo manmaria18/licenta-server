@@ -3,6 +3,7 @@ package com.imobiliare360.service;
 import com.imobiliare360.converter.BillConverter;
 import com.imobiliare360.converter.HomeConverter;
 import com.imobiliare360.dto.BillDto;
+import com.imobiliare360.dto.BillStatusDto;
 import com.imobiliare360.dto.HomeDto;
 import com.imobiliare360.dto.RoomDto;
 import com.imobiliare360.entity.*;
@@ -112,22 +113,30 @@ public class BillService {
             billRepository.save(billEntity);
     }
 
+    public void save(BillStatusDto billStatusDto) {
+        BillStatusEntity statusEntity = new BillStatusEntity();
+        statusEntity.setStatus(billStatusDto.getStatus());
+        billStatusRepository.save(statusEntity);
+    }
+
     public void generateBillsForServiceProvider(Long serviceProviderID){
 
 
     }
 
     public void generateBillsForServiceProviderServiceType(Long serviceProviderID,Long serviceTypeID){
-           ProviderServiceEntity pse = providerRepository.getById(serviceProviderID).getServices().stream().filter(providerServiceEntity -> {
-                return providerServiceEntity.getServiceType().getId().equals(serviceTypeID);
-           }).findFirst().get();
-
-            List<HomeEntity> homes = homeRepository.findAll().stream().filter(home -> {
-                return home.getServices().stream().anyMatch(serviceEntity -> {
-                    return serviceEntity.getServiceType().getId().equals(serviceTypeID)
-                            && serviceEntity.getProvider().getId().equals(serviceProviderID);
-                });
-            }).collect(Collectors.toList());
+//           ProviderServiceEntity pse = providerRepository.getById(serviceProviderID).getServices().stream().filter(providerServiceEntity -> {
+//               System.out.println("HEREEE   "+ providerServiceEntity.getServiceType());
+//                return providerServiceEntity.getServiceType().getId().equals(serviceTypeID);
+//           }).findFirst().get();
+          // providerServiceRepository.findAll();
+            List<HomeEntity> homes = homeRepository.findAll();
+//                    .stream().filter(home -> {
+//                return home.getServices().stream().anyMatch(serviceEntity -> {
+//                    return serviceEntity.getServiceType().getId().equals(serviceTypeID)
+//                            && serviceEntity.getProvider().getId().equals(serviceProviderID);
+//                });
+//            }).collect(Collectors.toList());
 
             List<BillEntity> bills = new ArrayList<>();
 
@@ -141,26 +150,34 @@ public class BillService {
                 BillStatusEntity expectingInputStatus = statuses.stream().filter(billStatus-> {
                     return  BillStatus.EXPECTING_INPUT.equals(billStatus.getStatus());
                 }).findFirst().get();
-                BillStatusEntity actualStatus;
-                switch(pse.getServiceType().getPriceType()){
-                    case PriceType.FIX:
-                        actualStatus = pendingStatus;
-                        break;
-                    case PriceType.VARIABIL:
-                        actualStatus = expectingInputStatus;
-                        break;
-                    default:
-                        actualStatus = null;
-                }
 
-                newBill.setStatus(actualStatus);
-                newBill.setProviderService(pse);
-                float actualPrice=0;
-                if(PriceType.FIX.equals(pse.getServiceType().getPriceType())){
-                    actualPrice=pse.getPrice();
-                }
-                newBill.setSum(actualPrice);
+                home.getServices().forEach(service-> {
+                    BillStatusEntity actualStatus;
+                    switch(service.getServiceType().getPriceType()){
+                        case PriceType.FIX:
+                            actualStatus = pendingStatus;
+                            break;
+                        case PriceType.VARIABIL:
+                            actualStatus = expectingInputStatus;
+                            break;
+                        default:
+                            actualStatus = null;
+                    }
+
+                    newBill.setStatus(actualStatus);
+                    newBill.setProviderService(service);
+                    float actualPrice=0;
+                    if(PriceType.FIX.equals(service.getServiceType().getPriceType())){
+                        actualPrice=service.getPrice();
+                    }
+                    newBill.setSum(actualPrice);
+
+                });
+                bills.add(newBill);
             }
+            bills.forEach(bill -> {
+                billRepository.save(bill);
+            });
 
     }
 

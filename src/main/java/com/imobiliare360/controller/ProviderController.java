@@ -2,6 +2,7 @@ package com.imobiliare360.controller;
 import com.imobiliare360.dto.LocationDto;
 import com.imobiliare360.dto.ProviderDto;
 import com.imobiliare360.dto.ProviderServicesDto;
+import com.imobiliare360.dto.ServiceTypeDto;
 import com.imobiliare360.service.ProviderService;
 import com.imobiliare360.service.ProviderServiceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,4 +87,20 @@ public class ProviderController {
         return new ResponseEntity<String>("Bill was created with great success!", HttpStatus.OK);
 
     }
+
+    @PostMapping(value="/serviceTypes/")
+    public ResponseEntity<String> createServiceType(@RequestBody ServiceTypeDto serviceTypeDto)
+    //@CurrentUser UserPrincipal currentUser)
+    {
+        System.out.println(serviceTypeDto);
+        //System.out.println(billDto.getLocation().getLatitude());
+
+
+        providerServiceService.save(serviceTypeDto);
+
+        return new ResponseEntity<String>("ServiceType was created with great success!", HttpStatus.OK);
+
+    }
+
+
 }

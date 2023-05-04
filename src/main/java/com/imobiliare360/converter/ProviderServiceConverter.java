@@ -19,16 +19,16 @@ public class ProviderServiceConverter {
     private ServiceTypeConverter serviceTypeConverter;
 
     public ProviderServicesDto convertToDto(ProviderServiceEntity providerServiceEntity) {
-        System.out.println("Entered in convertToDto");
+//        System.out.println("Entered in convertToDto");
         ProviderServicesDto psDto = new ProviderServicesDto();
         psDto.setId(providerServiceEntity.getId());
-        System.out.println(providerServiceEntity.getProvider().toString());
+//        System.out.println(providerServiceEntity.getProvider().toString());
         ProviderDto providerDto = providerConverter.providerEntityToDto(providerServiceEntity.getProvider());//new ProviderDto(providerServiceEntity.getProvider().getId(),providerServiceEntity.getProvider().getName());//
-        System.out.println("Provider:"+providerDto.toString());
+   //     System.out.println("Provider:"+providerDto.toString());
         psDto.setProvider(providerDto);
         psDto.setPrice(providerServiceEntity.getPrice());
-        ServiceTypeDto stDto = new ServiceTypeDto(providerServiceEntity.getServiceType().getId(), providerServiceEntity.getServiceType().getType());//serviceTypeConverter.serviceTypeEntityToDto(providerServiceEntity.getServiceType());
-        System.out.println("ServiceType:"+stDto.toString());
+        ServiceTypeDto stDto = new ServiceTypeDto(providerServiceEntity.getServiceType().getId(),providerServiceEntity.getServiceType().getType(),providerServiceEntity.getServiceType().getPriceType());//serviceTypeConverter.serviceTypeEntityToDto(providerServiceEntity.getServiceType());
+  //      System.out.println("ServiceType:"+stDto.toString());
         psDto.setServiceType(stDto);
         return psDto;
     }

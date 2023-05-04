@@ -11,4 +11,5 @@ import java.util.List;
 public class ServiceTypeDto {
     Long id;
     String type;
+    String priceType;
 }

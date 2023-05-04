@@ -4,6 +4,7 @@ import com.imobiliare360.converter.ProviderServiceConverter;
 import com.imobiliare360.converter.ServiceTypeConverter;
 import com.imobiliare360.dto.ProviderDto;
 import com.imobiliare360.dto.ProviderServicesDto;
+import com.imobiliare360.dto.ServiceTypeDto;
 import com.imobiliare360.entity.HomeEntity;
 import com.imobiliare360.entity.ProviderEntity;
 import com.imobiliare360.entity.ProviderServiceEntity;
@@ -45,7 +46,14 @@ public class ProviderServiceService {
     public List<ProviderServicesDto> getAll() {
         List<ProviderServiceEntity> servicesEntities = providerServicesRepository.findAll();
 
-        System.out.println("SERVICE getAllServices: "+servicesEntities.toString());
+        //System.out.println("SERVICE getAllServices: "+servicesEntities.toString());
         return providerServiceConverter.providerServicesEntitiesToDtos(servicesEntities);
+    }
+
+    public void save(ServiceTypeDto serviceTypeDto){
+       ServiceType serviceType = new ServiceType();
+       serviceType.setType(serviceTypeDto.getType());
+       serviceType.setPriceType(serviceTypeDto.getPriceType());
+       serviceTypeRepository.save(serviceType);
     }
 }
