@@ -2,10 +2,7 @@ package com.imobiliare360.service;
 
 import com.imobiliare360.converter.BillConverter;
 import com.imobiliare360.converter.HomeConverter;
-import com.imobiliare360.dto.BillDto;
-import com.imobiliare360.dto.BillStatusDto;
-import com.imobiliare360.dto.HomeDto;
-import com.imobiliare360.dto.RoomDto;
+import com.imobiliare360.dto.*;
 import com.imobiliare360.entity.*;
 import com.imobiliare360.repository.*;
 import com.imobiliare360.security.model.User;
@@ -17,7 +14,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -171,7 +172,8 @@ public class BillService {
                         actualPrice=service.getPrice();
                     }
                     newBill.setSum(actualPrice);
-
+                    newBill.setIssueDate(Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+                    newBill.setDeadline(Date.from(LocalDate.now().plusMonths(1).atStartOfDay(ZoneId.systemDefault()).toInstant()));
                 });
                 bills.add(newBill);
             }
@@ -207,5 +209,17 @@ public class BillService {
                 .collect(Collectors.toList());
         List<BillDto> billsOfAUser = new ArrayList<>();
         return billsOfAUser;
+    }
+
+    public void submitIndex(BillIndexDto billIndexDto) {
+        BillEntity billEntity = billRepository.getById(billIndexDto.getBillId());
+        float newSum = billEntity.getProviderService().getPrice() * billIndexDto.getIndex();
+        billEntity.setSum(newSum);
+        List<BillStatusEntity> statuses = billStatusRepository.findAll();
+        BillStatusEntity pendingStatus = statuses.stream().filter(billStatus-> {
+            return  BillStatus.PENDING.equals(billStatus.getStatus());
+        }).findFirst().get();
+        billEntity.setStatus(pendingStatus);
+        billRepository.save(billEntity);
     }
 }

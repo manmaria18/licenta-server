@@ -221,4 +221,18 @@ public class BillController {
     }
 
 
+    @PostMapping(value="/index")
+    public ResponseEntity<String> submitIndex(@RequestBody BillIndexDto billIndexDto)
+    //@CurrentUser UserPrincipal currentUser)
+    {
+
+        System.out.println(billIndexDto);
+
+
+        billService.submitIndex(billIndexDto);
+
+        return new ResponseEntity<String>("Bill was updated with great success!", HttpStatus.OK);
+
+    }
+
 }
