@@ -211,7 +211,7 @@ public class BillService {
         return billsOfAUser;
     }
 
-    public void submitIndex(BillIndexDto billIndexDto) {
+    public BillDto submitIndex(BillIndexDto billIndexDto) {
         BillEntity billEntity = billRepository.getById(billIndexDto.getBillId());
         float newSum = billEntity.getProviderService().getPrice() * billIndexDto.getIndex();
         billEntity.setSum(newSum);
@@ -221,5 +221,6 @@ public class BillService {
         }).findFirst().get();
         billEntity.setStatus(pendingStatus);
         billRepository.save(billEntity);
+        return billConverter.billEntityToDto(billEntity);
     }
 }
