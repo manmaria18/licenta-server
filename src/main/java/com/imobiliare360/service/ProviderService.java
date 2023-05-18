@@ -15,14 +15,21 @@ public class ProviderService {
     @Autowired
     ProviderServicesRepository providerServicesRepository;
 
-    public void save(ProviderDto providerDto) {
+    public ProviderDto findByName(String providerName) {
+        ProviderEntity providerEntity = providerRepository.findByName(providerName);
 
+        ProviderDto providerDto = new ProviderDto();
+        providerDto.setName(providerEntity.getName());
+        providerDto.setId(providerEntity.getId());
+
+        return providerDto;
+    }
+
+    public void save(ProviderDto providerDto) {
         ProviderEntity providerEntity = new ProviderEntity();
         providerEntity.setName(providerDto.getName());
-        List<ProviderServiceEntity> psEntities = new ArrayList<>();
-        // go through the services
 
-        providerEntity.setServices(psEntities);
         providerRepository.save(providerEntity);
+
     }
 }

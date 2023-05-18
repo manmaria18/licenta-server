@@ -13,5 +13,5 @@ import java.util.List;
 public class ProviderDto {
     private Long id;
     private String name;
-    //private List<ProviderServicesDto> services;
+    private List<ProviderServicesDto> services;
 }

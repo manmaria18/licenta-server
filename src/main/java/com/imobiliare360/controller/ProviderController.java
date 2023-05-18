@@ -88,19 +88,5 @@ public class ProviderController {
 
     }
 
-    @PostMapping(value="/serviceTypes/")
-    public ResponseEntity<String> createServiceType(@RequestBody ServiceTypeDto serviceTypeDto)
-    //@CurrentUser UserPrincipal currentUser)
-    {
-        System.out.println(serviceTypeDto);
-        //System.out.println(billDto.getLocation().getLatitude());
-
-
-        providerServiceService.save(serviceTypeDto);
-
-        return new ResponseEntity<String>("ServiceType was created with great success!", HttpStatus.OK);
-
-    }
-
 
 }

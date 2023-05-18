@@ -16,6 +16,5 @@ import java.util.List;
 //@Repository
 @Transactional
 public interface ProviderRepository extends JpaRepository<ProviderEntity, Long>{
-
-    //void save(ProviderEntity providerEntity);
+    ProviderEntity findByName(String name);
 }

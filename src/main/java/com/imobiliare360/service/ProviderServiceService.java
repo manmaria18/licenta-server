@@ -24,22 +24,23 @@ public class ProviderServiceService {
     ProviderRepository providerRepository;
     @Autowired
     ProviderServicesRepository providerServicesRepository;
-
-    @Autowired
-    ServiceTypeConverter serviceTypeConverter;
-
     @Autowired
     ProviderServiceConverter providerServiceConverter;
     @Autowired
     ServiceTypeRepository serviceTypeRepository;
+
     public void save(ProviderServicesDto providerServiceDto) {
 
         ProviderServiceEntity providerServiceEntity = new ProviderServiceEntity();
+
         ServiceType serviceTypeEntity = serviceTypeRepository.getById(providerServiceDto.getServiceType().getId());
         providerServiceEntity.setServiceType(serviceTypeEntity);
+
         providerServiceEntity.setPrice(providerServiceDto.getPrice());
+
         ProviderEntity providerEntity = providerRepository.getById(providerServiceDto.getProvider().getId());
         providerServiceEntity.setProvider(providerEntity);
+
         providerServicesRepository.save(providerServiceEntity);
     }
 
@@ -50,10 +51,4 @@ public class ProviderServiceService {
         return providerServiceConverter.providerServicesEntitiesToDtos(servicesEntities);
     }
 
-    public void save(ServiceTypeDto serviceTypeDto){
-       ServiceType serviceType = new ServiceType();
-       serviceType.setType(serviceTypeDto.getType());
-       serviceType.setPriceType(serviceTypeDto.getPriceType());
-       serviceTypeRepository.save(serviceType);
-    }
 }

@@ -26,8 +26,6 @@ public class UserController {
     private UserRepository userRepository;
 
 
-
-
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @GetMapping("/user/me")

@@ -1,26 +1,20 @@
 package com.imobiliare360.service;
 
 import com.imobiliare360.converter.BillConverter;
-import com.imobiliare360.converter.HomeConverter;
 import com.imobiliare360.dto.*;
 import com.imobiliare360.entity.*;
 import com.imobiliare360.repository.*;
-import com.imobiliare360.security.model.User;
 import com.imobiliare360.security.repository.UserRepository;
 import com.imobiliare360.util.BillStatus;
-import com.imobiliare360.util.PriceType;
+import com.imobiliare360.util.PriceTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -155,10 +149,10 @@ public class BillService {
                 home.getServices().forEach(service-> {
                     BillStatusEntity actualStatus;
                     switch(service.getServiceType().getPriceType()){
-                        case PriceType.FIX:
+                        case PriceTypes.FIX:
                             actualStatus = pendingStatus;
                             break;
-                        case PriceType.VARIABIL:
+                        case PriceTypes.VARIABIL:
                             actualStatus = expectingInputStatus;
                             break;
                         default:
@@ -168,7 +162,7 @@ public class BillService {
                     newBill.setStatus(actualStatus);
                     newBill.setProviderService(service);
                     float actualPrice=0;
-                    if(PriceType.FIX.equals(service.getServiceType().getPriceType())){
+                    if(PriceTypes.FIX.equals(service.getServiceType().getPriceType())){
                         actualPrice=service.getPrice();
                     }
                     newBill.setSum(actualPrice);

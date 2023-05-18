@@ -43,5 +43,4 @@ public class FavoritesController {
         return new ResponseEntity<Long>(Long.parseLong(id), HttpStatus.OK);
     }
 
-
 }

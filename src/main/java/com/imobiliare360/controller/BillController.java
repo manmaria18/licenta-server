@@ -2,10 +2,6 @@ package com.imobiliare360.controller;
 
 
 import com.imobiliare360.dto.*;
-import com.imobiliare360.entity.BillEntity;
-import com.imobiliare360.entity.ProviderServiceEntity;
-import com.imobiliare360.entity.ProviderEntity;
-import com.imobiliare360.entity.ServiceType;
 import com.imobiliare360.security.CurrentUser;
 import com.imobiliare360.security.UserPrincipal;
 import com.imobiliare360.service.BillService;
@@ -19,10 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
-
 import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -126,7 +120,7 @@ public class BillController {
     public ResponseEntity<String> create(//@RequestPart("images") List<MultipartFile> images,
                                          @RequestPart("bill") BillDto billDto,
                                          Long homeId)
-                                         //@CurrentUser UserPrincipal currentUser)
+    //@CurrentUser UserPrincipal currentUser)
     {
         System.out.println(billDto);
         //System.out.println(billDto.getLocation().getLatitude());
@@ -141,14 +135,14 @@ public class BillController {
     public ResponseEntity<String> create()
     //@CurrentUser UserPrincipal currentUser)
     {
-       BillStatusDto pending = new BillStatusDto();
-       pending.setStatus(BillStatus.PENDING);
-       BillStatusDto expectingInput = new BillStatusDto();
-       expectingInput.setStatus(BillStatus.EXPECTING_INPUT);
-       BillStatusDto payed = new BillStatusDto();
-       payed.setStatus(BillStatus.PAYED);
-       BillStatusDto canceled = new BillStatusDto();
-       canceled.setStatus(BillStatus.CANCELED);
+        BillStatusDto pending = new BillStatusDto();
+        pending.setStatus(BillStatus.PENDING);
+        BillStatusDto expectingInput = new BillStatusDto();
+        expectingInput.setStatus(BillStatus.EXPECTING_INPUT);
+        BillStatusDto payed = new BillStatusDto();
+        payed.setStatus(BillStatus.PAYED);
+        BillStatusDto canceled = new BillStatusDto();
+        canceled.setStatus(BillStatus.CANCELED);
         billService.save(pending);
         billService.save(expectingInput);
         billService.save(payed);
@@ -180,35 +174,14 @@ public class BillController {
 
     }
 
-    @PostMapping(value ="/testGenerate")
-    public void generateBillsTest(){
-
-        billService.generateBillsForServiceProviderServiceType(4L, 1L);
-    }
 
 
-    @GetMapping(value="/testHouse")
-    public ResponseEntity<String> createTestHouse() throws IOException
-    //@CurrentUser UserPrincipal currentUser)
-    {
-        HomeDto testHome = new HomeDto();
-        //testHome.setId(1L);
-        testHome.setName("Vila");
-        UserDto me = new UserDto();
-        me.setUsername("Mar");
-        testHome.setUserDto(me);
-        testHome.setLocation(new LocationDto(0,0));
 
-        homeService.save(testHome,1L);
-
-        return new ResponseEntity<String>("Bill was created with great success!", HttpStatus.OK);
-
-    }
 
     @PutMapping(value="/", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<String> edit(//@RequestPart("images") List<MultipartFile> images,
                                        @RequestPart("bill") BillDto billDto)
-                                       //@CurrentUser UserPrincipal currentUser)
+    //@CurrentUser UserPrincipal currentUser)
     {
         System.out.println(billDto);
         //System.out.println(homeDto.getLocation().getLatitude());
@@ -229,7 +202,7 @@ public class BillController {
         System.out.println(billIndexDto);
 
 
-       BillDto newBill = billService.submitIndex(billIndexDto);
+        BillDto newBill = billService.submitIndex(billIndexDto);
 
         return new ResponseEntity<BillDto>(newBill, HttpStatus.OK);
 
