@@ -5,136 +5,197 @@ import com.emperia.dto.*;
 import com.emperia.security.CurrentUser;
 import com.emperia.security.UserPrincipal;
 import com.emperia.service.BillService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
+import javax.validation.Valid;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 @RestController
 @CrossOrigin
 @RequestMapping(value = "/api/bills")
-
+@Tag(name = "Bill Controller", description = "API endpoints for managing bills")
 public class BillController {
     @Autowired
     private BillService billService;
 
-
-    @PostMapping(value="/")
-    public ResponseEntity<String> create(@RequestBody BillDto billDto)
-    {
+    @PostMapping(value = "/")
+    @Operation(summary = "Create a bill")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Bill created successfully"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    public ResponseEntity<String> create(
+            @RequestBody @Valid BillDto billDto) {
 
         billService.save(billDto);
 
-        return new ResponseEntity<String>("Bill was created with great success!", HttpStatus.OK);
-
+        return ResponseEntity.ok("Bill was created with great success!");
     }
 
-    @PutMapping(value="/")
-    public ResponseEntity<String> edit(@RequestBody BillDto billDto)
-    {
-        System.out.println(billDto);
+    @PutMapping(value = "/")
+    @Operation(summary = "Edit a bill")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Bill updated successfully"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    public ResponseEntity<String> edit(
+            @RequestBody @Valid BillDto billDto) {
 
         billService.edit(billDto);
 
-        return new ResponseEntity<String>("Bill was updated with great success!", HttpStatus.OK);
-
+        return ResponseEntity.ok("Bill was updated with great success!");
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<?> delete(@PathVariable String id,
-                                    @CurrentUser UserPrincipal currentUser)
-    {
+    @Operation(summary = "Delete a bill")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Bill deleted successfully"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    public ResponseEntity<?> delete(
+            @PathVariable @Parameter(description = "Bill ID") String id,
+            @CurrentUser UserPrincipal currentUser) {
+
         Long idNumeric;
         try {
             idNumeric = Long.parseLong(id);
-        }
-        catch (Exception e)
-        {
-            return new ResponseEntity<String>("Please provide a numeric id!", HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Please provide a numeric id!");
         }
 
         BillDto billDto;
-
         try {
             billDto = billService.delete(idNumeric);
-        }
-        catch (EntityNotFoundException e)
-        {
-            return new ResponseEntity<String>("The bill with the provided id does not exist!", HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("The bill with the provided id does not exist!");
         }
 
-        return new ResponseEntity<BillDto>(billDto, HttpStatus.OK);
-
+        return ResponseEntity.ok(billDto);
     }
 
-
-
     @GetMapping(value = "/{id}")
-    public ResponseEntity<?> get(@PathVariable String id)
-    {
+    @Operation(summary = "Get a bill by ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Bill retrieved successfully"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    public ResponseEntity<?> get(
+            @PathVariable @Parameter(description = "Bill ID") String id) {
 
         Long idNumeric;
         try {
             idNumeric = Long.parseLong(id);
-        }
-        catch (Exception e)
-        {
-            return new ResponseEntity<String>("Please provide a numeric id!", HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Please provide a numeric id!");
         }
 
         BillDto billDto;
-
         try {
             billDto = billService.get(idNumeric);
-        }
-        catch (EntityNotFoundException e)
-        {
-            return new ResponseEntity<String>("The bill with the provided id does not exist!", HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("The bill with the provided id does not exist!");
         }
 
-        return new ResponseEntity<BillDto>(billDto, HttpStatus.OK);
+        return ResponseEntity.ok(billDto);
     }
 
-
     @GetMapping(value = "/search/{houseId}")
-    public ResponseEntity<?> searchByHouseId(@PathVariable Long houseId)
-    {
-        List<BillDto> billsDtos;
+    @Operation(summary = "Search bills by house ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Bills found"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    public ResponseEntity<?> searchByHouseId(
+            @PathVariable @Parameter(description = "House ID") Long houseId) {
 
+        List<BillDto> billsDtos;
         try {
             billsDtos = billService.search(houseId);
         }
-        catch (EntityNotFoundException e)
-        {
-            return new ResponseEntity<String>("Could not fetch the bills with the given homeId", HttpStatus.INTERNAL_SERVER_ERROR);
+        catch (EntityNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("Could not fetch the bills with the given homeId");
         }
 
-        return new ResponseEntity<List<BillDto>>((MultiValueMap<String, String>) billsDtos, HttpStatus.OK);
+        return ResponseEntity.ok(billsDtos);
     }
 
     @GetMapping(value = "/")
-    public ResponseEntity<List<BillDto>> getAll()
-    {
-        return new ResponseEntity<List<BillDto>>(billService.getAll(), HttpStatus.OK);
+    @Operation(summary = "Get all bills")
+    @ApiResponse(responseCode = "200", description = "Bills retrieved successfully")
+    public ResponseEntity<List<BillDto>> getAll() {
+        return ResponseEntity.ok(billService.getAll());
     }
-
 
     @GetMapping(value = "/mine")
-    public ResponseEntity<List<BillDto>> getMyBills( @CurrentUser UserPrincipal currentUser)
-    {
-        return new ResponseEntity<List<BillDto>>(billService.getAllForUser(currentUser.getId()), HttpStatus.OK);
+    @Operation(summary = "Get user's bills")
+    @ApiResponse(responseCode = "200", description = "User's bills retrieved successfully")
+    public ResponseEntity<List<BillDto>> getMyBills(
+            @CurrentUser UserPrincipal currentUser) {
+        return ResponseEntity.ok(billService.getAllForUser(currentUser.getId()));
     }
 
-    @GetMapping(value ="/generate/all")
-    public ResponseEntity<String> generateAllBills(){
+    @GetMapping("/between")
+    @Operation(summary = "Get bills generated between a given interval")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Bills retrieved successfully"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    public ResponseEntity<List<BillDto>> getBillsGeneratedBetween(
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
+            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate) {
 
-         billService.generateAllBills();
-
-        return new ResponseEntity<String>("All Bills generated succesfully", HttpStatus.OK);
+        try {
+            List<BillDto> bills = billService.getBillsGeneratedBetween(startDate, endDate);
+            return ResponseEntity.ok(bills);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Collections.emptyList());
+        }
     }
 
+    @GetMapping(value = "/generate/all")
+    @Operation(summary = "Generate all bills")
+    @ApiResponse(responseCode = "200", description = "All bills generated successfully")
+    public ResponseEntity<String> generateAllBills() {
+        billService.generateAllBills();
+        return ResponseEntity.ok("All Bills generated successfully");
+    }
+
+    @PostMapping("/generate/{homeId}")
+    @Operation(summary = "Generate bills for a home")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Bills generated successfully"),
+            @ApiResponse(responseCode = "404", description = "Home not found"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    public ResponseEntity<String> generateBillsForHome(
+            @PathVariable @Parameter(description = "Home ID") Long homeId) {
+
+        try {
+            billService.generateBillsForHome(homeId);
+            return ResponseEntity.ok("Bills generated successfully for the home with ID: " + homeId);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Home not found with ID: " + homeId);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred while generating bills for the home with ID: " + homeId);
+        }
+    }
 }

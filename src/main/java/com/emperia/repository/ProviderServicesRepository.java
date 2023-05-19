@@ -8,6 +8,5 @@ import javax.transaction.Transactional;
 //@Repository
 @Transactional
 public interface ProviderServicesRepository extends JpaRepository<ProviderServiceEntity, Long> {
-    //void save(ProvidedServiceEntity providedSeviceEntity);
 
 }

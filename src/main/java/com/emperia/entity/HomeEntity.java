@@ -16,12 +16,6 @@ import java.util.List;
 public class HomeEntity extends BaseEntity
 {
     private String name;
-    //private String description;
-    //private float price;
-
-
-//    @OneToMany(mappedBy="home", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<BillEntity> bills;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private LocationEntity location;

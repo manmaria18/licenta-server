@@ -3,53 +3,74 @@ import com.emperia.dto.BillStatusDto;
 import com.emperia.dto.BillStatusDto;
 import com.emperia.service.BillStatusService;
 import com.emperia.service.ServiceTypeService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
 @CrossOrigin
 @RequestMapping(value = "/api/billStatus")
+@Tag(name = "Bill Status Controller", description = "API endpoints for managing bill statuses")
 public class BillStatusController {
 
     @Autowired
     private BillStatusService billStatusService;
 
-
-    @PostMapping(value="/")
-    public ResponseEntity<String> create(@RequestBody BillStatusDto billStatusDto) {
+    @PostMapping(value = "/")
+    @Operation(summary = "Create a bill status")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Bill status created successfully"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    public ResponseEntity<String> create(
+            @RequestBody @Valid BillStatusDto billStatusDto) {
 
         billStatusService.save(billStatusDto);
 
-        return new ResponseEntity<String>("Created with great success!", HttpStatus.OK);
-
+        return ResponseEntity.ok("Created with great success!");
     }
 
-    @GetMapping(value="/")
+    @GetMapping(value = "/")
+    @Operation(summary = "Get all bill statuses")
+    @ApiResponse(responseCode = "200", description = "Bill statuses retrieved successfully")
     public ResponseEntity<List<BillStatusDto>> getAll() {
-        List<BillStatusDto> serviceTypeDtoList = billStatusService.findAll();
+        List<BillStatusDto> billStatusDtoList = billStatusService.findAll();
 
-        return new ResponseEntity<List<BillStatusDto>>(serviceTypeDtoList, HttpStatus.OK);
-
+        return ResponseEntity.ok(billStatusDtoList);
     }
 
-    @DeleteMapping(value="/{id}")
-    public ResponseEntity<String> delete(@PathVariable Long id) {
+    @DeleteMapping(value = "/{id}")
+    @Operation(summary = "Delete a bill status")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Bill status deleted successfully"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    public ResponseEntity<String> delete(
+            @PathVariable @Parameter(description = "Bill status ID") Long id) {
         billStatusService.delete(id);
 
-        return new ResponseEntity<String>("Succesfully deleted", HttpStatus.OK);
-
+        return ResponseEntity.ok("Successfully deleted");
     }
 
-    @PutMapping(value="/")
-    public ResponseEntity<String> update(@RequestBody BillStatusDto serviceTypeDto) {
-        billStatusService.update(serviceTypeDto);
+    @PutMapping(value = "/")
+    @Operation(summary = "Update a bill status")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Bill status updated successfully"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    public ResponseEntity<String> update(
+            @RequestBody @Valid BillStatusDto billStatusDto) {
+        billStatusService.update(billStatusDto);
 
-        return new ResponseEntity<String>("Succesfully updated", HttpStatus.OK);
-
+        return ResponseEntity.ok("Successfully updated");
     }
-
 }

@@ -9,33 +9,23 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import javax.transaction.Transactional;
+import java.util.Date;
 import java.util.List;
 
 @Transactional
-//@Repository
 public interface BillRepository extends JpaRepository<BillEntity, Long> {
-    //@Query(value = "SELECT * FROM bill WHERE home_id = ?1", nativeQuery = true)
-    //@Query(value = "SELECT * FROM bill WHERE home_id = ?1", nativeQuery = true)
     List<BillEntity> findByHomeId(Long homeId);
-    //List<BillEntity> findByUserId(Long userId);
 
+    @Query(value = "SELECT * FROM bill WHERE issue_date BETWEEN :startDate AND :endDate", nativeQuery = true)
+    List<BillEntity> findBillsGeneratedBetween(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
 
-//    @Query(value = "SELECT * FROM bill", nativeQuery = true)
-//    List<BillEntity> findAll();
-
-
-    @Query(value = "SELECT * FROM bill WHERE id = ?1", nativeQuery = true)
+    @Query(value = "SELECT * FROM bill WHERE id = :id", nativeQuery = true)
     BillEntity getById(@Param("id") Long idNumeric);
 
-
     @Modifying
-    @Query(value = "DELETE FROM favorite_home WHERE home_id = ?1", nativeQuery = true)
-    void deleteById(@Param("home_id") Long idNumeric);
+    @Query(value = "DELETE FROM favorite_home WHERE home_id = :homeId", nativeQuery = true)
+    void deleteById(@Param("homeId") Long idNumeric);
 
     void delete(BillEntity billEntity);
-
-
-    //BillEntity save(BillEntity billEntity);
-
 
 }

@@ -82,8 +82,15 @@ public class BillService {
                 .flatMap(homeId -> billRepository.findByHomeId(homeId).stream())
                 .collect(Collectors.toList());
 
-        List<BillDto> billsOfAUser = new ArrayList<>();
+        List<BillDto> billsOfAUser = billConverter.toDtos(bills);
         return billsOfAUser;
+    }
+
+    public List<BillDto> getBillsGeneratedBetween(Date startDate, Date endDate) {
+        if (endDate == null) {
+            endDate = new Date(); // Set the end date to today if not provided
+        }
+        return billConverter.toDtos(billRepository.findBillsGeneratedBetween(startDate, endDate));
     }
 
 
@@ -131,6 +138,11 @@ public class BillService {
         return homeBills;
     }
 
+    public void generateBillsForHome(Long homeId) {
+        HomeEntity homeEntity = homeRepository.getById(homeId);
+        generateBillsForHome(homeEntity);
+    }
+
     public void generateAllBills(){
 
         List<BillEntity> bills = new ArrayList<>();
@@ -145,5 +157,7 @@ public class BillService {
         billRepository.saveAll(bills);
 
     }
+
+
 
 }
