@@ -18,6 +18,4 @@ public class LocationEntity extends BaseEntity {
     private double latitude;
     private double longitude;
 
-    @OneToOne
-    private HomeEntity homeEntity;
 }

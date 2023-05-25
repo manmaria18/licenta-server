@@ -84,8 +84,6 @@ public class HomeService {
         User user = userRepository.getById(userId);
         homeEntity.setUser(user);
 
-        homeEntity = homeRepository.save(homeEntity);
-
         List<ProviderServiceEntity> services = new ArrayList<>();
         for(ProviderServicesDto service : homeDto.getServices()){
            ProviderServiceEntity serviceEntity = providerServicesRepository.getById(service.getId());
@@ -93,7 +91,7 @@ public class HomeService {
         }
         homeEntity.setServices(services);
 
-        LocationEntity locationEntity = new LocationEntity(homeDto.getLocation().getLatitude(), homeDto.getLocation().getLongitude(), homeEntity);
+        LocationEntity locationEntity = new LocationEntity(homeDto.getLocation().getLatitude(), homeDto.getLocation().getLongitude());
 
         locationRepository.save(locationEntity);
 
@@ -112,8 +110,6 @@ public class HomeService {
         User user = userRepository.getById(userId);
         homeEntity.setUser(user);
 
-
-
         List<ProviderServiceEntity> services = new ArrayList<>();
         for(ProviderServicesDto service : homeDto.getServices()){
             ProviderServiceEntity serviceEntity = providerServicesRepository.getById(service.getId());
@@ -121,7 +117,7 @@ public class HomeService {
         }
         homeEntity.setServices(services);
 
-        LocationEntity locationEntity = new LocationEntity(homeDto.getLocation().getLatitude(), homeDto.getLocation().getLongitude(), homeEntity);
+        LocationEntity locationEntity = new LocationEntity(homeDto.getLocation().getLatitude(), homeDto.getLocation().getLongitude());
 
         locationRepository.save(locationEntity);
 

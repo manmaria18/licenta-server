@@ -15,7 +15,7 @@ import javax.persistence.*;
 
 public class ProviderServiceEntity extends BaseEntity{
     //tipul de serviciu
-    @OneToOne
+    @ManyToOne
     private ServiceType serviceType;
     private float price;
    // private List<HouseEntity>

@@ -23,6 +23,6 @@ public class HomeEntity extends BaseEntity
     @ManyToOne
     private User user;
 
-    @OneToMany
+    @ManyToMany
     private List<ProviderServiceEntity> services;
 }
