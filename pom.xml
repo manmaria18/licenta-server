@@ -100,6 +100,13 @@
 			<artifactId>springdoc-openapi-ui</artifactId>
 			<version>1.5.11</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.stripe/stripe-java -->
+		<dependency>
+			<groupId>com.stripe</groupId>
+			<artifactId>stripe-java</artifactId>
+			<version>22.21.0</version>
+		</dependency>
+
 
 	</dependencies>
 

@@ -14,6 +14,7 @@ import com.emperia.service.*;
 import com.emperia.util.BillStatus;
 import com.emperia.util.PriceTypes;
 import com.emperia.util.ServiceTypes;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -113,7 +114,6 @@ public class InitializationController {
 
 
 
-
         return new ResponseEntity<String>("Initialized user maria", HttpStatus.OK);
     }
 
@@ -134,7 +134,7 @@ public class InitializationController {
     {
 
         SignUpRequest signUpRequest = new SignUpRequest();
-        signUpRequest.setName("Maria man");
+        signUpRequest.setName("Maria Man");
         signUpRequest.setUsername("maria");
         signUpRequest.setPassword("maria");
         signUpRequest.setEmail("maria@gmail.com");
