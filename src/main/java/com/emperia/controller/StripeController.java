@@ -1,62 +1,77 @@
 package com.emperia.controller;
 
+import com.emperia.dto.ConfirmPaymentDto;
+import com.emperia.dto.CreatePaymentDto;
+import com.emperia.dto.CreatePaymentResponseDto;
+import com.emperia.service.BillService;
 import com.stripe.Stripe;
+import com.stripe.exception.SignatureVerificationException;
 import com.stripe.exception.StripeException;
+import com.stripe.model.Event;
 import com.stripe.model.PaymentIntent;
+import com.stripe.net.Webhook;
 import com.stripe.param.PaymentIntentCreateParams;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
 public class StripeController {
 
-    // This is your test secret API key.
-    private static final String STRIPE_SECRET_KEY = "sk_test_51NBG3dJTQI7e9TUWZHXyPnd4nJHxUeT2Hr10j1hAm9TfjWzRLBdbDP3miQBvsNzGt7PfKLTwA39jXiO1uhqCm1Tp00F9VIXi4k";
+    @Value("${stripe.api.key}")
+    private String stripeApiKey;
 
+    @Value("${stripe.api.webhook.secret}")
+    private String stripeWebhookSecret;
 
-    static class CreatePayment {
-        //@SerializedName("items")
-        Object[] items;
-
-        public Object[] getItems() {
-            return items;
-        }
-    }
-
-//    static class CreatePaymentResponse {
-//        private String clientSecret;
-//        public CreatePaymentResponse(String clientSecret) {
-//            this.clientSecret = clientSecret;
-//        }
-//    }
-
+    @Autowired
+    private BillService billService;
 
     @PostMapping("/create-payment-intent")
-    public PaymentIntent createPaymentIntent(@RequestBody CreatePayment createPayment) throws StripeException {
-        Stripe.apiKey = STRIPE_SECRET_KEY;
+    public CreatePaymentResponseDto createPaymentIntent(@Valid @RequestBody CreatePaymentDto createPayment)throws StripeException {
 
-        PaymentIntentCreateParams params = PaymentIntentCreateParams.builder()
-                .setAmount(calculateOrderAmount(createPayment.getItems()))
+        Stripe.apiKey = stripeApiKey;
+
+        PaymentIntentCreateParams createParams = new
+                PaymentIntentCreateParams.Builder()
+                .setAmount(calculateOrderAmount(createPayment.getBillIds()))
                 .setCurrency("ron")
                 .setAutomaticPaymentMethods(
                         PaymentIntentCreateParams.AutomaticPaymentMethods.builder().setEnabled(true).build()
                 )
                 .build();
 
-        // Create a PaymentIntent with the order amount and currency
-        return PaymentIntent.create(params);
+        PaymentIntent intent = PaymentIntent.create(createParams);
+        return new CreatePaymentResponseDto(intent.getClientSecret());
+    }
+
+
+    public String checkPaymentIntentStatus(String paymentIntentId) throws StripeException {
+        Stripe.apiKey = stripeApiKey;
+
+        PaymentIntent paymentIntent = PaymentIntent.retrieve(paymentIntentId);
+        return paymentIntent.getStatus();
+    }
+
+    @PostMapping("/confirm-payment")
+    public ResponseEntity<?> handleStripeWebhook(@Valid @RequestBody ConfirmPaymentDto confirmPaymentDto) {
+        confirmPaymentDto.getBillIds().forEach(billId -> billService.pay(billId));
+
+        return new ResponseEntity<List<Long>>(confirmPaymentDto.getBillIds(), HttpStatus.ACCEPTED);
+
     }
 
     // Helper method to calculate order amount
-    static Long calculateOrderAmount(Object[] items) {
-        // Replace this constant with a calculation of the order's amount
-        // Calculate the order total on the server to prevent
-        // people from directly manipulating the amount on the client
-        return 1400L;
+    private Long calculateOrderAmount(List<Long> billIds) {
+        return billService.computeAmountForBills(billIds);
     }
+
 }
 
 

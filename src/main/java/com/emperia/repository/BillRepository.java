@@ -19,8 +19,8 @@ public interface BillRepository extends JpaRepository<BillEntity, Long> {
     @Query(value = "SELECT * FROM bill WHERE issue_date BETWEEN :startDate AND :endDate", nativeQuery = true)
     List<BillEntity> findBillsGeneratedBetween(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
 
-    @Query(value = "SELECT * FROM bill WHERE id = :id", nativeQuery = true)
-    BillEntity getById(@Param("id") Long idNumeric);
+
+    BillEntity findFirstById(Long id);
 
     @Modifying
     @Query(value = "DELETE FROM favorite_home WHERE home_id = :homeId", nativeQuery = true)

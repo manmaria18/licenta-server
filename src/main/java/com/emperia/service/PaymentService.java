@@ -25,7 +25,7 @@ public class PaymentService {
 
 
     public BillDto submitIndex(BillIndexDto billIndexDto) {
-        BillEntity billEntity = billRepository.getById(billIndexDto.getBillId());
+        BillEntity billEntity = billRepository.findFirstById(billIndexDto.getBillId());
 
         // update sum
         float newSum = billEntity.getProviderService().getPrice() * billIndexDto.getIndex();

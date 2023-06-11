@@ -45,14 +45,14 @@ public class BillService {
     }
 
     public BillDto get(Long id) {
-        BillEntity billEntity = billRepository.getById(id);
+        BillEntity billEntity = billRepository.findFirstById(id);
 
         return billConverter.toDto(billEntity);
     }
 
     public BillDto delete(Long idNumeric) {
 
-        BillEntity billEntity = billRepository.getById(idNumeric);
+        BillEntity billEntity = billRepository.findFirstById(idNumeric);
         billRepository.delete(billEntity);
         BillDto billDto = new BillDto();
         billDto.setId(billEntity.getId());
@@ -158,6 +158,21 @@ public class BillService {
 
     }
 
+    public Long computeAmountForBills(List<Long> billIds) {
+        Long totalAmount = billIds.stream()
+                .map(billId -> billRepository.findById(billId).map(BillEntity::getSum).orElse(0f))
+                .map(Float::longValue) // Convert float to Long
+                .reduce(0L, Long::sum);
 
+        return totalAmount;
+    }
+
+
+    public void pay(Long billId) {
+        BillEntity billEntity = billRepository.findFirstById(billId);
+        billEntity.setStatus(billStatusFactory.get(BillStatus.PAYED));
+
+        billRepository.save(billEntity);
+    }
 
 }
