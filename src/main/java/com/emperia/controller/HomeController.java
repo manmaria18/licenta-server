@@ -138,7 +138,7 @@ public class HomeController {
                     .body("Home was not created...");
         }
 
-        return ResponseEntity.ok("Home was created with great success!");
+        return ResponseEntity.status(HttpStatus.OK).body("Home was created with great success!");
     }
 
     @PutMapping(value = "/")

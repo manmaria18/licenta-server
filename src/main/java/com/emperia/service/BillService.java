@@ -140,7 +140,8 @@ public class BillService {
 
     public void generateBillsForHome(Long homeId) {
         HomeEntity homeEntity = homeRepository.getById(homeId);
-        generateBillsForHome(homeEntity);
+        List<BillEntity> homeBills = generateBillsForHome(homeEntity);
+        billRepository.saveAll(homeBills);
     }
 
     public void generateAllBills(){
